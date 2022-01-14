@@ -10,7 +10,7 @@ n = int(N)
 k = int(K)
 m = int(M)
 rem_n = 0
-rem_m = 0
+
 def extraction(n, m, k):
     result = 0
     while k > 0:
