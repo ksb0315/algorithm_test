@@ -13,13 +13,11 @@ for _ in range(n):
     mileages = list(map(int, input().split()))
     heapq.heapify(mileages)
     num = L - P
-    # 수강미달인 과목
     if num > 0:
         heapq.heappush(temp, 1)
     else:
         for i in range(abs(num)):
             heapq.heappop(mileages)
-        # 수강가능한 마일리지 중 가장 낮은 마일리지 (점수가 동일하다면 성준이에게 우선순위가 있기때문)    
         heapq.heappush(temp, heapq.heappop(mileages))
 
 while temp:
