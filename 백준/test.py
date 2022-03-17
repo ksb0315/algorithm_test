@@ -1,14 +1,12 @@
-n, m = map(int, input().split())
-
-def count_number(n, k):
-    count = 0
-    while n:
-        n //= k
-        count += n
-    return count
-
-five = count_number(n, 5) - count_number(m, 5) - count_number(n-m, 5)
-two = count_number(n, 2) - count_number(m, 2) - count_number(n-m, 2)
-
-ans = min(five, two)
-print(ans)
+case = int(input())
+ans = []
+for _ in range(case):
+    string = list(input().split())
+    for i in range(len(string)):
+        temp = ''
+        for j in range(len(string[i])-1, -1, -1):
+            temp += string[i][j]
+        string[i] = temp
+    ans.append(' '.join(string))
+for i in ans:
+    print(i)
