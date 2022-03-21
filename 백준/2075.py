@@ -10,10 +10,10 @@ import heapq
 
 read = lambda: sys.stdin.readline().rstrip()
 
-N = int(read())
+n = int(read())
 heap = []
 
-for _ in range(N):
+for _ in range(n):
 	nums = list(map(int, read().split()))
 
 	if not heap:
