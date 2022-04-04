@@ -5,46 +5,52 @@
 
 import sys
 
-c, r = map(int, sys.stdin.readline().split()) #열, 행
+def printCodd():
+    for i in range(c//2):
+        print("D"*(r-1),end="")
+        print("R",end="")
+        print("U"*(r-1),end="")
+        print("R",end="")
+    print("D"*(r-1))
 
-lr = [] #직사각형 행복지수
-for i in range(r):
-    lc = list(map(int, sys.stdin.readline().split())) #행 별 행복지수
-    lr.append(lc)
-min_list = []
-if r % 2 == 1:
-    print(('R' * (c-1) + 'D' + 'L' * (c-1) + 'D') * (r//2) + 'R' * (c-1))
-elif c % 2 == 1:
-    print(('R' * (r-1) + 'D' + 'L' * (r-1) + 'D') * (c//2) + 'R' * (r-1))
-elif r % 2 == 0 and c % 2 == 0: # 건너뛸 장소 찾기
-    low = 1000
-    position = [-1, -1]
+def printRoddCeven():
+    for i in range(r//2):
+        print("R"*(c-1),end="")
+        print("D",end="")
+        print("L"*(c-1),end="")
+        print("D",end="")
+    print("R"*(c-1))
+
+def printRevenCeven(temps):
+    min = 1000
+    indexi=-1
+    indexj=-1
     for i in range(r):
-        if i % 2 == 0:
-            for j in range(1, c, 2):
-                if low > lr[i][j]:
-                    low = lr[i][j]
-                    position = [i, j]
-        else: # i % 2 == 1
-            for j in range(0, c, 2):
-                if low > lr[i][j]:
-                    low = lr[i][j]
-                    position = [i, j]
-    res = ('D'*(r-1) + 'R' + 'U'*(r-1) + 'R')*(position[1]//2)
-    x = 2 * (position[1]//2)
-    y = 0
-    xbound = 2 * (position[1]//2) + 1
-    while x != xbound or y != r - 1:
-        if x < xbound and [y, xbound] != position:
-            x += 1
-            res += 'R'
-        elif x == xbound and [y, xbound-1] != position:
-            x -= 1
-            res += 'L'
-        if y != r-1:
-            y += 1
+        for j in range(c):
+            if((i+j)%2!=0 and min>temps[i][j]):
+                min=temps[i][j]
+                indexi=i
+                indexj=j
+    res = ('D'*(r-1)+'R'+'U'*(r-1)+'R')*(indexj//2)
+    currentX=2*(indexj//2)
+    currentY=0
+    xbound=2*(indexj//2)+1
+    while currentX!=xbound or currentY!=r-1:
+            currentY += 1
             res += 'D'
- 
-    res += ('R' + 'U'*(r-1) + 'R' + 'D'*(r-1))*((c-position[1]-1)//2)
- 
+    res += ('R' + 'U' * (r - 1) + 'R' + 'D' * (r - 1)) * ((c - indexj - 1) // 2)
     print(res)
+
+r, c = map(int, sys.stdin.readline().rstrip("\n").split())
+nums = []
+for i in range(r):
+    nums.append(list(map(int, sys.stdin.readline().rstrip().split())))
+start=nums[0][0]
+end=nums[r-1][c-1]
+temps=nums[:]
+if c%2!=0:
+    printCodd()
+elif r%2!=0:
+    printRoddCeven()
+elif c%2==0 and r%2==0:
+    printRevenCeven(temps)
