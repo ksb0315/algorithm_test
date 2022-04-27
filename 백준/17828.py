@@ -5,7 +5,7 @@
 
 n, x = map(int, input().split())
 
-if n * 26 < x:
+if n * 26 < x or n > x:
     print('!')
 else:
     string_list = ['A'] * n
