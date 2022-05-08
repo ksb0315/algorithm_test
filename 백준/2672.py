@@ -1,3 +1,5 @@
+# 밑변이 모두 x축에 평행한 N개의 직사각형이 주어질 때, 이 N개의 직사각형들이 차지하는 면적을 구하는 프로그램을 작성하시오. 여기서 주어진 직사각형들은 서로 겹칠 수도 있으며, 변이나 꼭짓점을 공유할 수도 있다.
+
 
 def count(list):
     cnt = 0
@@ -7,15 +9,14 @@ def count(list):
     return cnt
 
 
-N = int(input())
+n = int(input())
 rec = []
-for __ in range(N):
+for __ in range(n):
     x, y, w, h = map(float, input().split())
     rec.append([x, y, y+h, 1])
     rec.append([x+w, y, y+h, -1])
 
 rec.sort()
-# print(rec)
 
 area = 0
 ylist = [0]*25001
