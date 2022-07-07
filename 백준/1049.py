@@ -2,25 +2,23 @@
 
 # 끊어진 기타줄의 개수 N과 기타줄 브랜드 M개가 주어지고, 각각의 브랜드에서 파는 기타줄 6개가 들어있는 패키지의 가격, 낱개로 살 때의 가격이 주어질 때, 적어도 N개를 사기 위해 필요한 돈의 수를 최소로 하는 프로그램을 작성하시오.
 
+import sys
 
-n, m = map(int, input().split())
-s_list = [] #세트별 가격
-ea_list = [] #개당 가격
-min_price = 0
+input = sys.stdin.readline
+n, m = map(int,input().split())
+num = n
+ans = 0
+pack = float('inf')
+each = float('inf')
+for _ in range(m):
+    a, b = map(int,input().split())
+    if a < pack:
+        pack = a
+    if b < each:
+        each = b
 
-for i in range(m):
-    s, ea = map(int, input().split())
-    s_list.append(s)
-    ea_list.append(ea)
+ans += pack * (n//6)
+n = n % 6
+ans += each * n
 
-s_min = min(s_list) #세트 최소금액
-ea_min = min(ea_list) #낱개 최소금액
-
-if s_min <= ea_min * 6:
-    answer = s_min * (n // 6) + ea_min * (n % 6)
-    if s_min < ea_min * (n % 6):
-        answer = s_min * (n//6 + 1)
-else:
-    answer = ea_min * n
-
-print(answer)
+print(min(pack * ((num//6) + 1), ans, each * num))
