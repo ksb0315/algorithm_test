@@ -4,78 +4,40 @@
 # 공주가 가장 좋아하는 계절인 3월 1일부터 11월 30일까지 매일 꽃이 한 가지 이상 피어 있도록 한다.
 # 정원이 넓지 않으므로 정원에 심는 꽃들의 수를 가능한 적게 한다. 
 # N개의 꽃들 중에서 위의 두 조건을 만족하는, 즉 3월 1일부터 11월 30일까지 매일 꽃이 한 가지 이상 피어 있도록 꽃들을 선택할 때, 선택한 꽃들의 최소 개수를 출력하는 프로그램을 작성하시오. 
+import sys
 
-from sys import stdin
-from collections import deque
-import datetime
-input = stdin.readline
-
+input = sys.stdin.readline
 n = int(input())
-flowers = []
-# start month, day & end month, day
-for i in range(n):
-    start_month, start_day, end_month, end_day = map(int, input().split())
-    a = datetime.date(1999, start_month, start_day)
-    b = datetime.date(1999, end_month, end_day)
-    flowers.append((a, b))
+date = []
 
-# 시작 날짜를 기준으로 정렬하기 -> 만약 같은 날짜에 시작한다면, 일찍 끝나는 꽃이 우선적으로 정렬
-sorted_flowers = deque(sorted(flowers, key=lambda x : (x[0], x[1])))
+for _ in range(n):
+    temp = list(map(int, input().split()))
+    date.append([temp[0] * 100 + temp[1], temp[2] * 100 + temp[3]])
 
-result = []
-flag = True
+date.sort(key=lambda x:(x[0], x[1]))
+cnt = 0
+end = 0
+target = 301
 
-# 가장 긴걸 뽑기
-# 겹치는 시간 최소화
-# 3/1 ~ 12/1 신경쓰기
-while sorted_flowers:
-    start, end = sorted_flowers.popleft()
-    if len(result) == 0:
-        if start <= datetime.date(1999, 3, 1):
-            result.append((start, end))
+while date:
+    if target >= 1201 or target < date[0][0]:
+        break
+
+    for _ in range(len(date)):
+        if target >= date[0][0]:
+            if end <= date[0][1]:
+                end = date[0][1]
+
+            date.remove(date[0])
+
         else:
-            flag = False
             break
-    else:
-        pre_start, pre_end = result.pop()
-        if pre_end > end:       # 이전 꽃이 더 늦게 질 때
-            result.append((pre_start, pre_end))
-        else:                   # 이전 꽃이 더 빨리 질 때
-            if start <= datetime.date(1999, 3, 1):
-                result.append((start, end))
-            elif pre_end >= datetime.date(1999, 12, 1): # 이미 result의 마지막 원소로 11/30을 포함할 때
-                if len(result) == 0:
-                    result.append((pre_start, pre_end))                    
-                else:
-                    before_start, before_end = result.pop() 
-                    if start > pre_start and before_end >= pre_start:
-                        result.append((before_start, before_end))
-                        result.append((start, end))
-                    else:
-                        result.append((before_start, before_end))
-                        result.append((pre_start, pre_end))                    
-            else:   # 3/1, 11/30에 걸치지 않을 때
-                if len(result) == 0:    # 남는거 없으면 그냥 넣기(비교대상이 없으므로)
-                    result.append((pre_start, pre_end))
-                    result.append((start, end))
-                else:                   # 남는게 있는 경우
-                    before_start, before_end = result.pop()     # 그 전 전 원소 뽑기
-                    if before_end >= start:                     # 그 전 전 꽃이 현재 꽃의 시작보다 늦게 질 때 (포함하는 경우) ~ 겹치는 시간 최소화
-                        result.append((before_start, before_end))
-                        result.append((start, end))   
-                    else:                                       # 그 전 전 꽃이 현재 꽃의 시작보다 빨리 질 때 (포함 못함)
-                        result.append((before_start, before_end))
-                        result.append((pre_start, pre_end))
-                        result.append((start, end))                                        
-if flag:
-    if result[-1][1] <= datetime.date(1999, 11, 30): # 마지막 원소가 11월 30일을 포함하지 않는 경우
-        print(0)
-    else:
-        print(len(result))
-else:
+
+    target = end
+    cnt += 1
+
+if target < 1201:
     print(0)
-
-
-
-#아직 못품
-#다음기회에..
+else:
+    print(cnt)
+    

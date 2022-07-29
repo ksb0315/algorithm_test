@@ -1,30 +1,36 @@
 import sys
-input=sys.stdin.readline
-p=1000000000
 
-def power(adj,n):
-    if n==1:
-        return adj
-    elif n%2:
-        return multi(power(adj,n-1),adj)
-    else:
-        return power(multi(adj,adj),n//2)
+input = sys.stdin.readline
+n = int(input())
+date = []
 
-def multi(a,b):
-    temp=[[0]*len(b[0]) for _ in range(2)]
-    for i in range(2):
-        for j in range(len(b[0])):
-            sum=0
-            for k in range(2):
-                sum+=a[i][k]*b[k][j]
-            temp[i][j]=sum%p
-    return temp
+for _ in range(n):
+    temp = list(map(int, input().split()))
+    date.append([temp[0] * 100 + temp[1], temp[2] * 100 + temp[3]])
 
-adj=[[1,1],[1,0]]
+date.sort(key=lambda x:(x[0], x[1]))
+cnt = 0
+end = 0
+target = 301
 
-start=[[1],[1]]
-a, b = map(int,input().split())
+while date:
+    if target >= 1201 or target < date[0][0]:
+        break
 
-print(multi(power(adj,a-2),start))
-print(multi(power(adj,b-1),start))
-print(multi(power(adj,b-1),start)[0][0] - multi(power(adj,a-2),start)[0][0])
+    for _ in range(len(date)):
+        if target >= date[0][0]:
+            if end <= date[0][1]:
+                end = date[0][1]
+
+            date.remove(date[0])
+
+        else:
+            break
+
+    target = end
+    cnt += 1
+
+if target < 1201:
+    print(0)
+else:
+    print(cnt)
