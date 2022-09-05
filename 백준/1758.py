@@ -15,4 +15,4 @@ for i in range(n):
         continue
     money += (tip[i] - i)
 
-print(money)
+print(money)    
