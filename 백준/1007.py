@@ -37,4 +37,5 @@ for _ in range(t):
         y2_total = y_total - y1_total
 
         res = min(res, math.sqrt((x1_total - x2_total) ** 2 + (y1_total - y2_total) ** 2))
+    
     print(res)
