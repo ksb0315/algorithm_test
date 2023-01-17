@@ -1,70 +1,76 @@
-# 2018115741 허준수 , 완료
-"""
-1. 가장 작은 y값 (2차원 배열)을 점 p로 시작
-최초로 convex hull에 포함하는 점 p는 y 값이 가장 작은 점 중 x 값이 가장 큰 점
-2. 각도를 보며(arctan()사용해서 각도구하기) 추가
-math.atan2(ay – py, ax – px)가 radian 단위로 각도 반환해준다.
-3. p를 제외한 각도를 오름차순으로 정렬한다 즉 P배열에 1~N에 저장되어있다.
-4. 스택에 p와 P[1]를 push한다.
+# 1. 상자 이동
+#     - 입력
+#         - x : 시작 위치
+#         - y : 도착 위치
+#         - z : 최대 이동 회수
+#     - 문제
+#         일렬로 나열된 상자가 있다. 최대 z번 이동가능하고, x에서 y로 이동해야한다.
+#         최대 이동가능 횟수 내에 이동을 할 수 있을 때 최대 도달가능 인덱스 상자는 얼마인가?
+#         만약 y에 도착하지 못하면 -1을 출력하라
+# time complexity : O(1)
 
-5. 비교(볼록, 오목)해서 볼록아니면 j는 잘못된 연결, i-k 직직연결(배열추가 삭제?)
-6. N개만큼(튜플 수) 반복(push)한다. 
-7. 마지막 세 점의 concave(오목) 여부 확인
-"""
-
-import math
-
-
-def ccw(i, j, k):  # 반시계방향
-    area2 = (j[0] - i[0]) * (k[1] - i[1]) - (j[1] - i[1]) * (k[0] - i[0])
-    if area2 > 0:
-        return True
+def solution1(x, y, z):
+    r = z - abs(x - y)
+    if r < 0:
+        return -1
     else:
-        return False
+        if r % 2 == 0: # 남은 r이 짝수면 (가장 먼) 마지막 인덱스까지 도달했다가 도착 인덱스까지 도착 가능
+            return max(y + r//2, x, y)
+        else: # 남은 r이 홀수면 (가장 먼) 마지막 인덱스까지 도달했다가 도착 인덱스까지 도착 불가능
+            return -1
+
+print(solution1(3, 0, 5))
 
 
-def grahamScan(points):
-    stack = []
+# 2. 색깔 구매
+#     - 입력
+#         - cost = [10,20,30] > 각 색깔마다의 가격
+#         - x = 가진 자산
+#     - 문제      
+#         색깔을 구매를 하려고 한다. cost의 i 인덱스를 구매를 하려고 하면 cost[i]의 가격으로 2^i 개를 살 수 있다.
+#         가진 자산 내에서 가장 많이 구매를 할 수 있는 방법으로 구매를 했을 때 몇 개의 색연필을 구매할 수 있는가?
+#         (10^9 + 7) 보다 커지면 해당 값으로 모듈러 연산을 수행
+# time complexity : O(N)
 
-    # 가장 작은 y값 구하기 위해 정렬
-    points = sorted(points, key=lambda p: (p[1], -p[0]))
+def solution2(cost, x):
+    res = 0
+    cost = list(reversed(cost))
+    for i in range(len(cost)):
+        if x >= cost[i]:
+            x -= cost[i]
+            res += 2 ** i
+    return (res % (10 ** 9 + 7))
 
-    # 1. 가장 작은 y값을 점 p로 시작   -- (3, -1)
-    p = points[0]  # px = p[0] , py = p[1]
+print(solution2([10, 20, 30], 50))
 
-    # 2. 각도를 보며(arctan()사용해서 각도구하기) 추가 math.atan2(ay – py, ax – px)가 radian 단위로 각도 반환해준다.
-    # 3. p를 제외한 각도를 오름차순으로 정렬한다 즉 P배열에 1~N에 저장되어있다.
-    points.sort(key=lambda i: math.atan2(i[1] - p[1], i[0] - p[0]))
+# - 3. 빵 옮기기
+#     - 입력
+#         - box = [10,3,5,31]
+#     - 문제        
+#         각 상자마다 빵이 담겨져 있고 그 개수를 box에 기록해둔다.        
+#         빵을 뒤에서 앞으로만 옮길 수 있다.
+#         옮기는 과정이 모두 끝나고 가장 많은 개수를 가진 박스의 빵의 개수가 최소가 되도록 해야한다.        
+#         옮기는 과정이 끝나고 최대 빵의 개수는 얼마인가?   
+# time complexity : O(N)     
 
-    # 4. 스택에 p와 P[1]를 push한다.
-    stack.append(p)  # points[0]  ,  N = 0
-    stack.append(points[1])        # N = 1
-    next_cnt = 2                   # N = 2
+def solution3(box):
+    # ‘가장 많은 개수를 가진 박스의 빵의 개수가 최소가 되도록’하려면 mean에 가깝게 빵을 옮겨야한다.
+	cal = []
+	s = 0
 
-    # 5. 비교(볼록, 오목)해서 볼록아니면 j는 잘못된 연결, i-k 직직연결(배열추가 삭제?)
-    # 6. N개만큼(튜플 수) 반복(push)한다.
-    while next_cnt < len(points):  # 2 ~ N 까지 검사
-        while len(points) >= 2:  # 스택에 2개 이상 있다면
-            second = stack.pop()
-            first = stack[-1]
+	# (i+1)번째 box까지 각 box에 들어가야할 빵의 개수 (각 box에 mean 만큼 들어가야함)
+	for i in range(len(box)):
+		s += box[i]
+		cal.append(s / (i + 1))
 
-            # 7. 마지막 세 점의 concave(오목) 여부 확인
-            if ccw(first, second, points[next_cnt]) == True:
-                stack.append(second)
-                break
-
-        # ccw에서 볼록해서 True를 받고 세 점 중에 끝점인 points[next_cnt]를 스택에 넣어준다.
-        stack.append(points[next_cnt])
-        next_cnt += 1   # 다음 N을 찾기 위해 next_cnt를 증가시켜준다.
-
-    return stack
+    # m =  box에 들어가야할 빵의 평균값 중 가장 큰 값
+    # 현재 가장 많은 빵이 들어있는 box의 개수를 줄이기 위해
+	m = max(cal)
+    
+	if m - int(m) > 0: # 소수점이 있는경우 각 box안의 빵은 m개 또는 m+1개 이므로 이 중 가장 큰 값이 필요하기 때문에
+		return int(m) + 1
+	else:
+		return int(m) # 소수점이 없는경우 각 box안의 빵 중 가장 큰 값은 m 이다
 
 
-if __name__ == "__main__":
-    # xy 좌표계에 속한 점의 list(points)를 입력으로 받는 함수 정의
-    list = [(0, 0), (-2, -1), (-1, 1), (1, -1), (3, -1), (-3, -1)]
-    print(grahamScan(list))  # page 51
-
-    list = [(4, 2), (3, -1), (2, -2), (1, 0), (0, 2), (0, -2), (-1, 1),
-            (-2, -1), (-2, -3), (-3, 3), (-4, 0), (-4, -2), (-4, -4)]
-    print(grahamScan(list))  # page 52
+print(solution3([10, 3, 5, 31]))
