@@ -9,7 +9,6 @@ n = int(input())
 
 arr = list(map(int, input().split()))
 dp = [0] * n
-temp = []
 
 for i in range(n):
     for j in range(i):

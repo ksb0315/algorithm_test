@@ -3,17 +3,28 @@
 # 예를 들어 8은 3 + 5로 나타낼 수 있고, 3과 5는 모두 홀수인 소수이다. 또, 20 = 3 + 17 = 7 + 13, 42 = 5 + 37 = 11 + 31 = 13 + 29 = 19 + 23 이다.
 # 이 추측은 아직도 해결되지 않은 문제이다.
 # 백만 이하의 모든 짝수에 대해서, 이 추측을 검증하는 프로그램을 작성하시오.
-from sys import stdin
 
-array = [True for i in range(1000001)]
-for i in range(2, 1001):
-    if array[i]:
-        for k in range(i + i, 1000001, i):
-            array[k] = False
-while True:
-    n = int(stdin.readline())
-    if n == 0: break
+import sys
+
+input = sys.stdin.readline
+
+array = [True]* (1000001)
+
+for i in range(2,1001,2):
+    if i == 2:
+        if array[i]:
+            for j in range(i + i, 1000001, i):
+                array[j] = False
+    else:
+        i -= 1
+        if array[i]:
+            for j in range(i + i, 1000001, i):
+                array[j] = False
+n = 1
+while n != 0:
+    n = int(input())
     for i in range(3, len(array)):
-        if array[i] and array[n-i]:
-            print(n, "=", i, "+", n-i)
-            break
+        if array[i]:
+            if array[n-i]:
+                print(n, "=", i, "+", n-i)
+                break
