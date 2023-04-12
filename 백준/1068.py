@@ -8,45 +8,20 @@ import sys
 
 input = sys.stdin.readline
 
-def delNode(d):
-    global cnt
-    if tree[d]:
-        if len(tree[d]) == 2:
-            if tree[d][0]:
-                delNode(tree[d][0])
-            if tree[d][1]:
-                delNode(tree[d][1])
-            if not tree[d][0]:
-                cnt += 1
-        else:
-            if tree[d][0]:
-                delNode(tree[d][0])
-            if not tree[d][0]:
-                cnt += 1
-    else:
-        cnt += 1
+def dfs(num, arr):
+    arr[num] = -2
+    for i in range(len(arr)):
+        if num == arr[i]:
+            dfs(i, arr)
 
 n = int(input())
-nodes = list(map(int, input().split()))
+arr = list(map(int, input().split()))
 d = int(input())
-tree = [[] for _ in range(n)]
-
-for i in range(n):
-    if nodes[i] == -1:
-        continue
-    tree[nodes[i]].append(i)
-
-cnt_leaf = 0
-for i in range(len(tree)):
-    if not tree[i]:
-        cnt_leaf += 1
-
 cnt = 0
-delNode(d)
 
-if cnt_leaf - cnt == 0 and n > 1:
-    print(1)
-elif cnt_leaf - cnt == 0 and n == 1:
-    print(0)
-else:
-    print(cnt_leaf - cnt)
+dfs(d, arr)
+cnt = 0
+for i in range(len(arr)):
+    if arr[i] != -2 and i not in arr:
+        cnt += 1
+print(cnt)

@@ -1,46 +1,41 @@
-'Lab 배합 시료 무게',
-'Lab 배합 염료 #1 명',
-'Lab 배합 염료 #1 제조사명',
-'Lab 배합 염료 #1 종류',
-'Lab 배합 염료 #1 타입',
-'Lab 배합 염료 #1 투입량',
-'Lab 배합 염료 #2 명',
-'Lab 배합 염료 #2 제조사명',
-'Lab 배합 염료 #2 종류',
-'Lab 배합 염료 #2 타입',
-'Lab 배합 염료 #2 투입량',
-'Lab 배합 염료 #3 명',
-'Lab 배합 염료 #3 제조사명',
-'Lab 배합 염료 #3 종류',
-'Lab 배합 염료 #3 타입',
-'Lab 배합 염료 #3 투입량',
-'Lab 배합 염료 #4 명',
-'Lab 배합 염료 #4 제조사명',
-'Lab 배합 염료 #4 종류',
-'Lab 배합 염료 #4 타입',
-'Lab 배합 염료 #4 투입량',
-# 'Lab 배합 액비'
-'Lab 배합 용수량', # where?
-'Lab 배합 조제 #1 명',
-'Lab 배합 조제 #1 제조사명',
-'Lab 배합 조제 #1 종류',
-'Lab 배합 조제 #1 투입량',
-'Lab 배합 조제 #2 명',
-'Lab 배합 조제 #2 제조사명',
-'Lab 배합 조제 #2 종류',
-'Lab 배합 조제 #2 투입량',
-'Lab 배합 조제 #3 명',
-'Lab 배합 조제 #3 제조사명',
-'Lab 배합 조제 #3 종류',
-'Lab 배합 조제 #3 투입량',
-'Lab 배합 조제 #4 명',
-'Lab 배합 조제 #4 제조사명',
-'Lab 배합 조제 #4 종류',
-'Lab 배합 조제 #4 투입량'
+def solution(Dir, Cmd):
+    tree = []
 
-import sys
-input = sys.stdin.readline
-a, b, c = input().rstrip().split(' ')
-print(a)
-print(b)
-print(c)
+    # for d in Dir:
+    #     temp = list(d.split('/'))
+    #     for t in temp:
+    #         if t not in tree:
+    #             tree.append(t)
+    
+    # print(tree)
+
+
+    for cmd in Cmd:
+        answer = ''
+        if len(cmd) == 2:
+            if cmd[0] == "CD":
+                for d in Dir:
+                    if cmd[1] in d:
+                        temp = list(d.split('/'))
+                        for t in temp:
+                            if t == cmd[1]:
+                                answer += t
+                                break
+                            else:
+                                answer += (t + "/")
+                        break
+                
+            else:
+                print("Wrong Command")
+        elif len(cmd) == 1 and cmd[0] == "CD":
+            temp = answer
+            continue
+        else:
+            print("Wrong Command")
+    return answer
+
+
+a= ["C:/root","C:/root/folder1","C:/root/folder2/file1.txt","C:/root/folder2/file2.txt"]
+b= [["CD","folder1"],["CD"],["CD","folder2"]]
+
+solution(a, b)
